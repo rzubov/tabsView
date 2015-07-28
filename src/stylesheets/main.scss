@@ -1,0 +1,117 @@
+body, * {
+  font-family: sans-serif;
+  background: #283772;
+}
+.container {
+  width: 520px;
+  height: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+  * {
+    background: #fff;
+
+  }
+  box-shadow: 1px 1px 1px black;
+  border-radius: 3px;
+  margin: 0 auto;
+  padding: 35px;
+  h1 {
+    text-align: center;
+  }
+}
+.tab-page {
+  display:none;
+}
+
+.active-page {
+  display: block;
+}
+
+.container {
+  width: 960px;
+  height: auto;
+  border: 1px solid #ccc;
+  background: #fff;
+  box-shadow: 1px 1px 1px black;
+  border-radius: 3px;
+  margin: 0 auto;
+  padding: 35px;
+}
+.container * {
+  background: #fff;
+}
+.container h1 {
+  text-align: center;
+}
+.outer-wrap {
+  width:100%;
+  max-width:500px;
+  margin: 0 auto;
+}
+.clear-float {
+  clear:both;
+}
+
+ul.simple-tabs {
+  width:100%;
+  max-width:500px;
+  margin: 0;
+  padding: 0;
+}
+
+ul.simple-tabs li {
+  float:left;
+  width:33.33%;
+  height:44px;
+  /*margin-bottom: 30px;*/
+  list-style-type: none;
+  text-align: center;
+  line-height:44px;
+}
+
+ul.simple-tabs li:hover, ul.simple-tabs li:active {
+  background-color: #e8e8e8;
+}
+
+ul.simple-tabs li.active {
+  background-color: #000000;
+  color:#ffffff;
+
+}
+
+.tab-page {
+  max-width:500px;
+  width:100%;
+  -moz-box-sizing: border-box;
+  box-sizing: border-box;
+  border: thin #000000 solid;
+  height:400px;
+}
+
+img {
+  max-width: 500px;
+}
+
+.ninety-percent-pad {
+  width:90%;
+  margin:25px auto;
+}
+i.edit{
+  width:10px;
+  height:10px;
+  margin-left:15px;
+  display:inline-block;
+  background:red;
+}
+.simple-tabs li span{
+  padding:5px;
+  background:transparent!important;
+}
+.simple-tabs li.editable{
+  background:#fff;
+  color:#000;
+}
+.simple-tabs li.editable span{
+  background:#fff!important;
+  color:#000;
+}
