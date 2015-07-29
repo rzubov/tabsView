@@ -15,12 +15,15 @@ export function merge_options(obj1, obj2) {
   return obj3;
 }
 export function getAllElementsWithAttribute(attribute, value) {
-  var matchingElements;
+  var matchingElements =[];
   var allElements = document.getElementsByTagName('*');
-  for (let i = 0, n = allElements.length; i < n; i++) {
+  for (let i = 0; i < allElements.length; i++) {
     if (allElements[i].getAttribute(attribute) === value) {
       // Element exists with attribute. Add to array.
-      matchingElements = allElements[i];
+      matchingElements.push(allElements[i]);
+    }else if(!value&&allElements[i].getAttribute(attribute)){
+      // Element exists with attribute. Add to array.
+      matchingElements.push(allElements[i]);
     }
   }
   return matchingElements;

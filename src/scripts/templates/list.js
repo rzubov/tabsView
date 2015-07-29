@@ -2,10 +2,11 @@ import html from '../htmlTpl' ;
 export default  addr => html`
        <ul class="simple-tabs" id="demo-tabs">
         ${addr.map(addr => html`
-          <li data-tab="${addr.name}"><span>$${addr.title}</span><i class="edit"></i></li>
+          <li data-tab="${addr.name}" data-id="${addr.id}"><span>$${addr.title}</span><i class="edit"></i><i class="close"></i></li>
         `)}
+        <li class="addTab"><i class="add"></i></li>
         </ul>
-          <div data-pane='info' id="info" class="tab-page active-page">
+          <div data-pane='info' id="info" class="tab-page">
     <div class="ninety-percent-pad">
       Pork pastrami ground round t-bone. Brisket swine doner rump meatball bacon.
       Shankle tri-tip pork belly jerky venison chicken chuck tongue hamburger andouille kevin.
