@@ -1,4 +1,5 @@
 import htmlEscape from './htmlEscape' ;
+
 export default function html(literalSections, ...substs) {
   // Use raw literal sections: we don’t want
   // backslashes (\n etc.) to be interpreted
@@ -30,7 +31,7 @@ export default function html(literalSections, ...substs) {
   // Take care of last literal section
   // (Never fails, because an empty template string
   // produces one literal section, an empty string)
-  result += raw[raw.length-1]; // (A)
+  result += raw[raw.length - 1]; // (A)
 
   return result;
 } ;

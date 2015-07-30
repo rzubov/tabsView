@@ -1,10 +1,14 @@
-import {merge_options, getAllElementsWithAttribute} from "./cutils";
-import html from './templates/list';
+import {merge_options} from "./cutils";
+import htmlList from './templates/list';
+import htmlTpl from './htmlTpl' ;
+import guid from './utils/guid';
+import htmlTab from './templates/tab'
+import htmlTabPane from './templates/tabPane'
 
 class TabsView {
   constructor(elem, settings) {
     "use strict";
-    var defaults = {
+    let defaults = {
       container: ".article-tab",
       opener: ".article-heading",
       activeClass: "active",
@@ -12,13 +16,13 @@ class TabsView {
     };
     this.options = merge_options(defaults, settings);
     this.elem = elem;
-    var data = JSON.stringify([
-      {id: 1, title: 'Info', name: 'info', content: 'text'},
-      {id: 2, title: 'Images', name: 'images'},
-      {id: 3, title: 'Recipes', name: 'recipes'}
-    ]);
+
+    if (!localStorage.newTabs) {
+      localStorage.newTabs = 0;
+    }
+
     if (!localStorage[elem.id]) {
-      localStorage[elem.id] = data;
+      localStorage[elem.id] = '[]';
     }
     this.init(this.options);
   }
@@ -26,7 +30,7 @@ class TabsView {
 }
 TabsView.prototype.getData = function () {
   const that = this;
-  var list = html(JSON.parse(localStorage[that.elem.id]));
+  var list = htmlList(JSON.parse(localStorage[that.elem.id]));
   var e = that.elem;
   e.innerHTML = list;
 };
@@ -37,25 +41,25 @@ TabsView.prototype.saveData = function () {
 
 TabsView.prototype.init = function (options) {
   const that = this;
-  this.elem.addEventListener('click', e=>clickHandler(e));
   that.getData();
+
+  this.elem.addEventListener('click', e=>clickHandler(e));
   function clickHandler(e) {
     "use strict";
     //TODO: simplify delegation
     const target = e.target;
 
     if (target.dataset.tab) {
-      that.activate(target)
-    }else if(target.classList.contains('addTab')){
-      console.log('addTab');
+      that.activate(target.dataset.tab)
+    } else if (target.classList.contains('addTab')) {
       that.addTab();
     } else if (!target.classList.contains('close') && !target.classList.contains('edit') && target.parentNode.dataset.tab) {
-      that.activate(target.parentNode)
+      that.activate(target.parentNode.dataset.tab)
     } else if (target.classList.contains('close')) {
       that.removeTab(target.parentNode.dataset.id)
     } else if (target.classList.contains('edit')) {
       var span = target.parentNode.getElementsByTagName('span')[0];
-      that.activate(target.parentNode);
+      that.activate(target.parentNode.dataset.tab);
       span.setAttribute("contenteditable", true);
       target.parentNode.classList.add('editable');
       span.focus();
@@ -64,7 +68,7 @@ TabsView.prototype.init = function (options) {
         var code = e.keyCode || e.which;
         if (code == 13) {
           e.preventDefault();
-          that.saveTitle(target.parentNode.dataset.id, span.innerHTML)
+          that.saveTitle(target.parentNode.dataset.id, span)
         }
       });
 
@@ -75,7 +79,7 @@ TabsView.prototype.init = function (options) {
           spans[i].parentNode.classList.remove('editable');
         }
 
-        that.saveTitle(target.parentNode.dataset.id, span.innerHTML)
+        that.saveTitle(target.parentNode.dataset.id, span)
 
       });
     }
@@ -88,37 +92,38 @@ TabsView.prototype.init = function (options) {
     }
   }, true);
 
-  if (options || that.options.hashNav) {
+  if (that.options.hashNav) {
     var initHash = that.hashNav.init.bind(that);
     initHash();
+  } else {
+    that.activate(that.elem.querySelector('data-tab').dataset.tab)
   }
 };
 
-TabsView.prototype.saveTitle = function (id, text) {
+TabsView.prototype.saveTitle = function (id, span) {
   const that = this;
-
   let data = JSON.parse(localStorage[that.elem.id]);
 
   function findById(source, id) {
     for (let i = 0; i < source.length; i++) {
       if (source[i].id == id) {
-        data[i].title = text;
+        data[i].title = span.innerText;
         return false;
       }
     }
   }
 
   findById(data, id);
+  span.setAttribute("contenteditable", false);
+  span.parentNode.classList.remove('editable');
   localStorage[that.elem.id] = JSON.stringify(data);
-
-  that.init()
 };
 
 TabsView.prototype.removeTab = function (id) {
-  console.log(id);
   const that = this;
-
-  var data = JSON.parse(localStorage[that.elem.id]);
+  let tabPane = document.getElementById(id),
+    tabItem = document.querySelector('[data-id="' + id + '"]'),
+    data = JSON.parse(localStorage[that.elem.id]);
 
   function findById(source, elId) {
     for (let i = 0; i < source.length; i++) {
@@ -131,28 +136,48 @@ TabsView.prototype.removeTab = function (id) {
   }
 
   findById(data, id);
-  console.log(data);
+
   localStorage[that.elem.id] = JSON.stringify(data);
+
+  if (tabItem.classList.contains('active')) this.activate();
+  tabPane.parentElement.removeChild(tabPane);
+  tabItem.parentElement.removeChild(tabItem);
   document.location.hash = '';
-  that.init()
+
 };
 
-TabsView.prototype.addTab = function (id) {
+TabsView.prototype.addTab = function () {
   const that = this;
-  var data = JSON.parse(localStorage[that.elem.id]);
-  var newTab ={
-    id:'',
-    title:'New Tab'
-  }
+  let data = JSON.parse(localStorage[that.elem.id]),
+    newTabs = localStorage.newTabs,
+    tabsPanel = that.elem.getElementsByClassName('addTab')[0],
+    tabPanes = that.elem.getElementsByClassName('tabPanes')[0],
+    newTab = {
+      id: guid(),
+      title: 'New Tab ' + newTabs,
+      name: 'newTab' + newTabs,
+      content: 'Click on edit to set content'
+    };
+
+  localStorage.newTabs = parseInt(localStorage.newTabs) + 1;
+  data.push(newTab);
+  localStorage[that.elem.id] = JSON.stringify(data);
+
+  tabsPanel.insertAdjacentHTML('beforebegin', htmlTab(newTab));
+  tabPanes.insertAdjacentHTML('beforeend', htmlTabPane(newTab));
 };
 
-TabsView.prototype.activate = function (tab) {
-  var that = this;
-  var tabPane = getAllElementsWithAttribute('data-pane', tab.dataset.tab)[0];
+TabsView.prototype.activate = function (tabName) {
+  const that = this;
+
+  if (!tabName) tabName = that.elem.querySelector('[data-tab]').dataset.tab;
+
+  let tabPane = that.elem.querySelector('[data-pane=' + tabName + ']'),
+    tab = that.elem.querySelector('[data-tab=' + tabName + ']');
 
   if (!tab.classList.contains('active')) {
     //change the tab page and update the active tab
-    let list = this.elem.getElementsByTagName("li");
+    let list = that.elem.getElementsByTagName("li");
 
     for (let i = 0; i < list.length; i++) {
       let listItem = list[i],
@@ -161,7 +186,7 @@ TabsView.prototype.activate = function (tab) {
 
       if (itemClassList.contains('active')) {
         itemClassList.remove('active');
-        getAllElementsWithAttribute('data-pane', itemDataSet.tab)[0].classList.remove('active-page');
+        that.elem.querySelector('[data-pane=' + itemDataSet.tab + ']').classList.remove('active-page');
       }
     }
     tab.classList.add('active');
@@ -169,20 +194,23 @@ TabsView.prototype.activate = function (tab) {
     if (that.options.hashNav)that.hashNav.setHash(tab.dataset.tab);
   }
 };
-TabsView.prototype.goToTab = function (name) {
-  let tab = getAllElementsWithAttribute('data-tab', name);
-  this.activate(tab);
+TabsView.prototype.goToTab = function (id) {
+  let tabsList = this.elem.querySelectorAll('[data-tab]');
+  if (id > 0 && id <= tabsList) {
+    let name = tabsList[id - 1].dataset.tab;
+    this.activate(name);
+  }
 };
 TabsView.prototype.hashNav = {
   init: function () {
-    let hash = document.location.hash.replace('#', '');
-    let tab;
-    if (!hash) {
-      tab = getAllElementsWithAttribute('data-tab')[0];
+    let hash = document.location.hash.replace('#', ''),
+      tab;
+    if (hash && this.elem.querySelector('[data-tab="' + hash + '"]')) {
+      tab = hash;
     } else {
-      tab = getAllElementsWithAttribute('data-tab', hash)[0];
+      tab = this.elem.querySelector('[data-tab]').dataset.tab;
     }
-    if (tab)this.activate(tab);
+    if (tab) this.activate(tab);
   },
   setHash: function (hash) {
     document.location.hash = hash;

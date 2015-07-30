@@ -9,6 +9,13 @@
   }
 }
 
+@mixin user-select($select) {
+  -webkit-user-select: $select;
+  -moz-user-select: $select;
+  -ms-user-select: $select; // IE10+
+  user-select: $select;
+}
+
 body, * {
   font-family: sans-serif;
   background: #283772;
@@ -71,25 +78,24 @@ body, * {
   clear: both;
 }
 
-ul.simple-tabs {
+ul.tabNav {
   width: 100%;
   list-style: none;
   margin: 0;
   padding: 0;
   @include clearfix;
+  @include user-select(none);
 }
 
-ul.simple-tabs li {
+ul.tabNav li {
   float: left;
   height: 45px;
   line-height: 45px;
   background: #535e6c;
-  margin-left: 2px;
+  margin-right: 2px;
+  margin-bottom: 2px;
   padding: 0 15px;
   cursor: pointer;
-  &:first-child {
-    margin-left: 0;
-  }
   span {
     color: #fff;
     font-size: 18px;
@@ -100,7 +106,7 @@ ul.simple-tabs li {
   }
 }
 
-ul.simple-tabs li.addTab {
+ul.tabNav li.addTab {
   width: 45px;
   height: 45px;
   position: relative;
@@ -124,7 +130,7 @@ ul.simple-tabs li.addTab {
 
 }
 
-ul.simple-tabs li {
+ul.tabNav li {
   &:hover,
   &:active {
     background: #000;
@@ -152,7 +158,7 @@ ul.simple-tabs li {
   }
 }
 
-ul.simple-tabs li.active {
+ul.tabNav li.active {
   background: #fff;
   span {
     color: #535e6c;
@@ -181,11 +187,26 @@ ul.simple-tabs li.active {
 }
 
 .tab-page {
+  position: relative;
   width: 100%;
+  padding: 25px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border: thin #535e6c solid;
-  height: 400px;
+  min-height: 400px;
+  i.edit {
+    position: absolute;
+    right: 20px;
+    background: transparent url(/images/ico-edit.png) no-repeat -66px 0;
+    width: 12px;
+    height: 12px;
+    margin-left: 15px;
+    display: inline-block;
+    &:hover {
+      background-position: -44px 0;
+    }
+
+  }
 }
 
 img {
@@ -197,17 +218,17 @@ img {
   margin: 25px auto;
 }
 
-.simple-tabs li span {
+.tabNav li span {
   padding: 5px;
   background: transparent !important;
 }
 
-.simple-tabs li.editable {
+.tabNav li.editable {
   background: #fff;
   color: #000;
 }
 
-.simple-tabs li.editable span {
+.tabNav li.editable span {
   background: #fff !important;
   color: #000;
 }
