@@ -4,7 +4,7 @@ import htmlTpl from './htmlTpl' ;
 import guid from './utils/guid';
 import htmlTab from './templates/tab'
 import htmlTabPane from './templates/tabPane'
-
+"use strict";
 class TabsView {
   constructor(elem, settings) {
     "use strict";
@@ -43,8 +43,8 @@ TabsView.prototype.init = function (options) {
   const that = this;
   that.getData();
 
-  this.elem.addEventListener('click', e=>clickHandler(e));
-  function clickHandler(e) {
+  this.elem.getElementsByClassName('tabNav')[0].addEventListener('click', e=>tabNavClick(e));
+  function tabNavClick(e) {
     "use strict";
     //TODO: simplify delegation
     const target = e.target;
@@ -85,6 +85,31 @@ TabsView.prototype.init = function (options) {
     }
   }
 
+  this.elem.getElementsByClassName('tabPanes')[0].addEventListener('click', e=>tabPaneClick(e));
+  function tabPaneClick(e) {
+    const target = e.target;
+    if (target.classList.contains('edit')) {
+      var content = target.parentElement.getElementsByClassName('tab-content')[0];
+      content.setAttribute('id', 'editable');
+      let editor = new nicEditor({fullPanel: true}).panelInstance(content.id);
+      content.focus();
+
+      content.addEventListener("keydown", function (e) {
+        if (e.keyCode == 83 && (navigator.platform.match("Mac") ? e.metaKey : e.ctrlKey)) {
+          e.preventDefault();
+          that.saveContent(target.parentNode.id, content);
+          editor.removeInstance(content.id);
+          editor = null;
+          content.removeAttribute('id');
+        }
+      }, false);
+    }
+    if (target.classList.contains('save')) {
+      that.saveContent(target.parentNode.id, content);
+      content.removeAttribute('id');
+    }
+  }
+
   that.elem.addEventListener("dblclick", e=> {
     //TODO: set to all tab
     if (e.target.dataset.tab) {
@@ -116,6 +141,24 @@ TabsView.prototype.saveTitle = function (id, span) {
   findById(data, id);
   span.setAttribute("contenteditable", false);
   span.parentNode.classList.remove('editable');
+  localStorage[that.elem.id] = JSON.stringify(data);
+};
+
+TabsView.prototype.saveContent = function (id, span) {
+  const that = this;
+  let data = JSON.parse(localStorage[that.elem.id]);
+
+  function findById(source, id) {
+    for (let i = 0; i < source.length; i++) {
+      if (source[i].id == id) {
+        data[i].content = span.innerHTML;
+        return false;
+      }
+    }
+  }
+
+  findById(data, id);
+
   localStorage[that.elem.id] = JSON.stringify(data);
 };
 
@@ -196,7 +239,7 @@ TabsView.prototype.activate = function (tabName) {
 };
 TabsView.prototype.goToTab = function (id) {
   let tabsList = this.elem.querySelectorAll('[data-tab]');
-  if (id > 0 && id <= tabsList) {
+  if (id > 0 && id <= tabsList.length) {
     let name = tabsList[id - 1].dataset.tab;
     this.activate(name);
   }

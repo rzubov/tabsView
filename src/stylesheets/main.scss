@@ -16,7 +16,7 @@
   user-select: $select;
 }
 
-body, * {
+body {
   font-family: sans-serif;
   background: #283772;
   box-sizing: border-box;
@@ -189,21 +189,37 @@ ul.tabNav li.active {
 .tab-page {
   position: relative;
   width: 100%;
-  padding: 25px;
+  padding: 40px 25px 25px 25px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border: thin #535e6c solid;
   min-height: 400px;
   i.edit {
     position: absolute;
-    right: 20px;
-    background: transparent url(/images/ico-edit.png) no-repeat -66px 0;
-    width: 12px;
-    height: 12px;
+    top:10px;
+    right: 25px;
+    background: url(/images/ico-edit-content.png) no-repeat -31px 0;
+    width: 19px;
+    height: 19px;
     margin-left: 15px;
     display: inline-block;
+    cursor:pointer;
     &:hover {
-      background-position: -44px 0;
+      background-position: 0 0;
+    }
+  }
+  i.save {
+    position: absolute;
+    top:10px;
+    right: 60px;
+    background: url(/images/ico-save.png) no-repeat -30px 0;
+    width: 20px;
+    height: 20px;
+    margin-left: 15px;
+    display: inline-block;
+    cursor:pointer;
+    &:hover {
+      background-position: 0 0;
     }
 
   }
