@@ -1,4 +1,5 @@
 import htmlEscape from './htmlEscape' ;
+require("../polyfills/endsWith");
 
 export default function html(literalSections, ...substs) {
   // Use raw literal sections: we don’t want

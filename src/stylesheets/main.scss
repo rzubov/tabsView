@@ -18,26 +18,16 @@
 
 body {
   font-family: sans-serif;
-  background: #283772;
-  box-sizing: border-box;
+  background: #313949;
+  margin: 0;
 }
 
-.container {
-  width: 520px;
-  height: auto;
-  border: 1px solid #ccc;
-  background: #fff;
-  * {
-    background: #fff;
+.tabNavSection {
+  background: #313949;
+}
 
-  }
-  box-shadow: 1px 1px 1px black;
-  border-radius: 3px;
-  margin: 0 auto;
-  padding: 35px;
-  h1 {
-    text-align: center;
-  }
+* {
+  box-sizing: border-box;
 }
 
 .tab-page {
@@ -49,29 +39,24 @@ body {
 }
 
 .container {
-  max-width: 960px;
+  max-width: 990px;
+  padding: 0 15px;
   width: 100%;
   height: auto;
-  border: 1px solid #ccc;
-  background: #fff;
-  box-shadow: 1px 1px 1px black;
-  border-radius: 3px;
   margin: 0 auto;
-  padding: 35px;
-}
-
-.container * {
-  background: #fff;
 }
 
 .container h1 {
-  text-align: center;
+  color: #fff;
+  font-size: 40px;
+  height: 100px;
+  line-height: 100px;
+  margin: 0;
 }
 
-.outer-wrap {
-  width: 100%;
-  max-width: 500px;
-  margin: 0 auto;
+.tabsSection {
+  background: #fff;
+  padding-bottom: 80px;
 }
 
 .clear-float {
@@ -85,6 +70,7 @@ ul.tabNav {
   padding: 0;
   @include clearfix;
   @include user-select(none);
+  padding-top: 2px;
 }
 
 ul.tabNav li {
@@ -100,7 +86,6 @@ ul.tabNav li {
     color: #fff;
     font-size: 18px;
     white-space: nowrap;
-    max-width: 100px;
     overflow: hidden;
     display: inline;
   }
@@ -124,7 +109,7 @@ ul.tabNav li.addTab {
     content: '';
     width: 16px;
     height: 16px;
-    background: transparent url(/images/ico-add.png) no-repeat 0 0;
+    background: transparent url(../images/ico-add.png) no-repeat 0 0;
     display: block;
   }
 
@@ -136,7 +121,7 @@ ul.tabNav li {
     background: #000;
   }
   i.edit {
-    background: transparent url(/images/ico-edit.png) no-repeat -22px 0;
+    background: transparent url(../images/ico-edit.png) no-repeat -22px 0;
     width: 12px;
     height: 12px;
     margin-left: 15px;
@@ -147,7 +132,7 @@ ul.tabNav li {
 
   }
   i.close {
-    background: transparent url(/images/ico-close.png) no-repeat -22px 0;
+    background: transparent url(../images/ico-close.png) no-repeat -22px 0;
     width: 12px;
     height: 12px;
     margin-left: 15px;
@@ -164,7 +149,7 @@ ul.tabNav li.active {
     color: #535e6c;
   }
   i.edit {
-    background: transparent url(/images/ico-edit.png) no-repeat -66px 0;
+    background: transparent url(../images/ico-edit.png) no-repeat -66px 0;
     width: 12px;
     height: 12px;
     margin-left: 15px;
@@ -175,7 +160,7 @@ ul.tabNav li.active {
 
   }
   i.close {
-    background: transparent url(/images/ico-close.png) no-repeat -66px 0;
+    background: transparent url(../images/ico-close.png) no-repeat -66px 0;
     width: 12px;
     height: 12px;
     margin-left: 15px;
@@ -187,37 +172,43 @@ ul.tabNav li.active {
 }
 
 .tab-page {
+  @include clearfix;
   position: relative;
   width: 100%;
   padding: 40px 25px 25px 25px;
   -moz-box-sizing: border-box;
   box-sizing: border-box;
   border: thin #535e6c solid;
-  min-height: 400px;
+  min-height: 250px;
+  h1 {
+    color: #000;
+  }
   i.edit {
+    @include user-select(none);
     position: absolute;
-    top:10px;
+    top: 10px;
     right: 25px;
-    background: url(/images/ico-edit-content.png) no-repeat -31px 0;
+    background: url(../images/ico-edit-content.png) no-repeat -31px 0;
     width: 19px;
     height: 19px;
     margin-left: 15px;
     display: inline-block;
-    cursor:pointer;
+    cursor: pointer;
     &:hover {
       background-position: 0 0;
     }
   }
   i.save {
+    @include user-select(none);
     position: absolute;
-    top:10px;
-    right: 60px;
-    background: url(/images/ico-save.png) no-repeat -30px 0;
+    top: 10px;
+    right: 25px;
+    background: url(../images/ico-save.png) no-repeat -30px 0;
     width: 20px;
     height: 20px;
     margin-left: 15px;
-    display: inline-block;
-    cursor:pointer;
+    display: none;
+    cursor: pointer;
     &:hover {
       background-position: 0 0;
     }
@@ -226,7 +217,7 @@ ul.tabNav li.active {
 }
 
 img {
-  max-width: 500px;
+  max-width: 100%;
 }
 
 .ninety-percent-pad {
@@ -248,3 +239,61 @@ img {
   background: #fff !important;
   color: #000;
 }
+
+.nicEdit-main {
+  min-height: 250px !important;
+  padding: 10px;
+}
+
+.tabsAdditionalControls {
+  margin-top: 20px;
+  & > div {
+    margin-top: 20px;
+  }
+}
+
+#createdTabContent {
+  width: 100%;
+  border-width: 0px 1px 1px;
+  border-right-style: solid;
+  border-bottom-style: solid;
+  border-left-style: solid;
+  border-right-color: rgb(204, 204, 204);
+  border-bottom-color: rgb(204, 204, 204);
+  border-left-color: rgb(204, 204, 204);
+  overflow-y: auto;
+  overflow-x: hidden;
+  min-height: 250px;
+}
+
+.addTabForm {
+  @include clearfix;
+  input {
+    height: 30px;
+    line-height: 30px;
+    font-size: 14px;
+    padding: 0 10px;
+  }
+  button {
+    float: right;
+    height: 45px;
+    line-height: 45px;
+    background: #535e6c;
+    border: 0 solid;
+    color: #fff;
+    font-size: 18px;
+    padding: 0 15px;
+    cursor: pointer;
+    &:hover,
+    &:active {
+      background: #000;
+    }
+  }
+}
+
+.areaRow {
+  @include clearfix;
+  margin-top: 20px;
+  margin-bottom: 20px;
+}
+

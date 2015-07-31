@@ -1,8 +1,6 @@
 {
   "name": "tabsview",
   "version": "0.0.0",
-  "dependencies": {
-    "underscore": "*"
-    },
+  "dependencies": {},
   "devDependencies": {  }
 }

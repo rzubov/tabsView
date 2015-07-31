@@ -14,3 +14,23 @@ export function merge_options(obj1, obj2) {
   }
   return obj3;
 }
+
+
+/**
+ * Search in object by id
+ *
+ * @param {array} source
+ * @param {number} id
+ * @return {number} index
+ * */
+export function findById(source, id) {
+  for (let i = 0; i < source.length; i++) {
+    if (source[i].id == id) {
+      return i;
+    }
+  }
+  return -1;
+}
+
+
+

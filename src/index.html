@@ -9,30 +9,60 @@
   <link rel="stylesheet" href="stylesheets/main.css">
 
 </head>
-<body><!--[if lt IE 8]>
+<body><!--[if lt IE 9]>
 <p class="browsehappy">
   You are using an <strong>outdated</strong> browser.
   Please <a href="http://browsehappy.com/">upgrade your browser</a>
   to improve your experience.
 </p><![endif]-->
 
-<div class="container"><img src="images/dyno-logo.png" class="dyno-logo">
+<header>
+  <div class="container">
+    <h1>Javascript TabsView</h1>
+  </div>
+</header>
+<div class="tabsSection">
 
-  <p>Get you some ES6-ready Javascript (via Babel), with tons of other goodies like Browserify, Jade, and Gulp.</p>
+  <div id="tabsView"></div>
+  <div class="tabsAdditionalControls container">
+    <div>
+      <p>Set tab number to input and press go</p>
+      <input id="tabNumber" type="number"/>
+      <button id="goToTab">Go to id!</button>
+    </div>
+    <div>
+      <p>Set tab name to input and press go. Tab name the same like tab hash</p>
+      <input placeholder="E.g.: recipes" id="tabName" type="text"/>
+      <button id="goToName">Go to name!</button>
+    </div>
+    <form class="addTabForm" id="addTabForm">
+      <h3>Demo panel</h3>
+
+      <div class="inputsRow">
+        <input id="createdTabTitle" type="text" placeholder="title">
+        <input id="createdTabName" type="text" placeholder="name">
+      </div>
+      <div class="areaRow">
+
+        <div id="createdTabContent">
+        </div>
+      </div>
+      <button id="createTab">Create new tab</button>
+
+    </form>
+
+
+  </div>
 </div>
-<div class="container">
-  <div id="tabs-container"></div>
+<div class="tabsSection">
 
-  <input id="tabNumber" type="number"/>
-  <button id="goToTab">Go!</button>
+  <div id="tabsView2"></div>
 
 </div>
-<!--<div class="container">
-  <div id="tabs-container2"></div>
-  <button id="goToSlide">Go to Images slides</button>
-
-</div>-->
-<script src="editor/nicEdit.js"></script>
+<div class="tabsSection">
+  <div id="tabsView3"></div>
+</div>
+<script src="scripts/nicEdit.js"></script>
 <script src="scripts/app.js"></script>
 
 </body>
