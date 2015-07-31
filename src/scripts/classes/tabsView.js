@@ -79,8 +79,8 @@ class TabsView {
         let span = target.parentNode.getElementsByTagName('span')[0],
 
           targetDataSet = target.parentNode.dataset;
-        that.activate(targetDataSet.tab, true);
 
+        that.activate(targetDataSet.tab, true);
         span.setAttribute("contenteditable", true);
         target.parentNode.classList.add('editable');
         span.focus();

@@ -22,7 +22,8 @@ gulp.task('browser-sync', function () {
     notify: !!argv.notify,
     server: {
       baseDir: "./dist"
-    }
+    },
+    ghostMode: false
   });
 });
 
