@@ -33,4 +33,18 @@ export function findById(source, id) {
 }
 
 
+/**
+ * Search in hash string  by parameter name
+ *
+ * @return {string} hash vars
+ * */
+
+export function getHashVars() {
+  var vars = {};
+  var parts = document.location.hash.replace(/[#&]+([^=&]+)=([^&]*)/gi,
+    function (m, key, value) {
+      vars[key] = value;
+    });
+  return vars;
+}
 

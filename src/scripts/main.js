@@ -9,7 +9,7 @@ function setDemoData(id) {
       {
         id: guid(),
         title: 'Html5',
-        name: 'html5',
+        name: 'tv1-html5',
         content: htmlTpl`<div style="padding-left:15%;float: left;width: 100%;">
       <img src="http://i.imgur.com/J0SjT57.png" style="float: left; padding-right: 15px;"/>
       <ul style="float: left;color: #575e6b;font-size: 17px;line-height: 35px;margin-top: 40px;padding-left: 80px;">
@@ -27,7 +27,7 @@ function setDemoData(id) {
 `
       },
       {
-        id: guid(), title: 'CSS3', name: 'css3', content: htmlTpl`
+        id: guid(), title: 'CSS3', name: 'tv1-css3', content: htmlTpl`
       <div style="float:left;padding-top: 40px;width: 100%;"><h3>New HTML5 Elements</h3>
           <p style="float: left;">The most interesting new elements are:New semantic elements like </p>
           <p style="float: left;">New semantic elements like <b>&lt;header&gt;</b>, <b>&lt;footer&gt;</b>, <b>&lt;article&gt;</b>, and <b>&lt;section&gt;</b>.</p>
@@ -45,7 +45,7 @@ function setDemoData(id) {
       {
         id: guid(),
         title: 'JavaScript',
-        name: 'javascript',
+        name: 'tv1-javascript',
         content: htmlTpl`<div style="text-align: center;"><img src="http://i.imgur.com/hxHhK7v.jpg" width="638"></div>`
       }
     ]);
@@ -57,7 +57,6 @@ var tabs = new TabsView(document.getElementById('tabsView'),
   {
     hashNav: true,
     beforeInit: setDemoData('tabsView')
-
   });
 
 

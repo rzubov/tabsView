@@ -1,4 +1,4 @@
-import {merge_options, findById} from "../utils/utils";
+import {merge_options, findById, getHashVars} from "../utils/utils";
 import Generator from "../utils/generator";
 import htmlList from '../templates/list';
 import htmlTpl from '../utils/htmlTpl' ;
@@ -323,7 +323,21 @@ class TabsView {
    *
    * */
   setHash(hash) {
-    document.location.hash = hash;
+    let
+      isHash = document.location.hash.replace('#', '').length,
+      prefix = this.prefix.replace('-', ''),
+      sign = isHash > 1 ? '&' : '',
+      oldHash = document.location.hash,
+      vars = getHashVars()[prefix],
+      pattern = new RegExp(vars, 'g'),
+      newHash;
+
+    if (vars) {
+      newHash = oldHash.replace(pattern, hash);
+      document.location.hash = newHash;
+    } else {
+      document.location.hash += sign + prefix + '=' + hash;
+    }
   }
 
 
@@ -332,12 +346,11 @@ class TabsView {
    *
    * */
   initHash() {
-    let tab;
-    let hash = document.location.hash.replace('#', '');
-    let setHash = false;
-
-    if (hash && this.elem.querySelector('[data-tab="' + hash + '"]') && !hashInited) {
-      hashInited = true;
+    let tab,
+      prefix = this.prefix.replace('-', ''),
+      hash = getHashVars()[prefix],
+      setHash = false;
+    if (hash && this.elem.querySelector('[data-tab="' + hash + '"]')) {
       setHash = true;
       tab = hash;
     } else {
