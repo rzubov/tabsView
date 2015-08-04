@@ -26,7 +26,8 @@ class TabsView {
     let defaults = {
       beforeInit: false,
       afterInit: false,
-      hashNav: false
+      hashNav: false,
+      draggable: true
     };
 
     this.options = merge_options(defaults, settings);
@@ -150,6 +151,7 @@ class TabsView {
     } else if (that.elem.querySelector('[data-tab]')) {
       that.activate(that.elem.querySelector('[data-tab]').dataset.tab)
     }
+    if (that.options.draggable) that.draggable();
 
     if (that.options.afterInit) that.options.afterInit();
   }
@@ -167,6 +169,72 @@ class TabsView {
   }
 
 
+  draggable() {
+    const that = this;
+    let cols = that.elem.querySelectorAll('.tabNav li'),
+      dragSrcEl = null;
+
+    function handleDragStart(e) {
+      this.style.opacity = '0.4';  // this / e.target is the source node.
+      dragSrcEl = this;
+      e.dataTransfer.effectAllowed = 'move';
+      e.dataTransfer.setData('text/html', this);
+    }
+
+    function handleDrop(e) {
+      e.stopPropagation();
+      // Don't do anything if dropping the same column we're dragging.
+      if (dragSrcEl != this) {
+  //@TODO: implenet sorting
+        var data = e.dataTransfer.getData('text/html');
+
+        var parent = e.target.parentNode;
+        parent.insertBefore(data, e.target)
+      }
+      return false;
+    }
+
+    function handleDragOver(e) {
+      if (e.preventDefault) {
+        e.preventDefault(); // Necessary. Allows us to drop.
+      }
+
+      e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
+
+      return false;
+    }
+
+    function handleDragEnter(e) {
+      // this / e.target is the current hover target.
+      this.classList.add('over');
+    }
+
+    function handleDragEnd(e) {
+      // this/e.target is the source node.
+
+      [].forEach.call(cols, function (col) {
+        col.classList.remove('over');
+        col.style.opacity = '1';
+      });
+    }
+
+    function handleDragLeave(e) {
+      this.classList.remove('over');  // this / e.target is previous target element.
+      this.style.opacity = '1';
+    }
+
+    [].forEach.call(cols, function (col) {
+      col.addEventListener('dragstart', handleDragStart, false);
+      col.addEventListener('dragenter', handleDragEnter, false);
+      col.addEventListener('dragover', handleDragOver, false);
+      col.addEventListener('dragleave', handleDragLeave, false);
+      col.addEventListener('drop', handleDrop, false);
+      col.addEventListener('dragend', handleDragEnd, false);
+    });
+
+  }
+
+
   /**
    * Save data of tab title or content
    *
@@ -175,7 +243,6 @@ class TabsView {
    * @param {string} field                field name
    *
    * */
-
 
   saveData(id, content, field) {
     const that = this;
@@ -211,9 +278,9 @@ class TabsView {
     tabPane.parentElement.removeChild(tabPane);
     tabItem.parentElement.removeChild(tabItem);
 
-    if (tabItem.classList.contains('active') && !(that.elem.querySelectorAll('.tabNav li').length < 2)) this.activate(false, true);
-
-
+    if (tabItem.classList.contains('active') && !(that.elem.querySelectorAll('.tabNav li').length < 2)) {
+      this.activate(null, true);
+    }
   }
 
 
