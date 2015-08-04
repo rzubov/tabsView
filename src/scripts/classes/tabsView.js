@@ -27,7 +27,7 @@ class TabsView {
       beforeInit: false,
       afterInit: false,
       hashNav: false,
-      draggable: true
+      draggable: false
     };
 
     this.options = merge_options(defaults, settings);
@@ -169,68 +169,57 @@ class TabsView {
   }
 
 
+  /**
+   * Provide HTML5 drag 'n' drop sorting for tabs
+   *
+   * */
   draggable() {
+    //@TODO:Store sorting results
     const that = this;
-    let cols = that.elem.querySelectorAll('.tabNav li'),
-      dragSrcEl = null;
+    let tabs = that.elem.querySelectorAll('.tabNav')[0],
+      dragEl,
+      nextEl;
 
-    function handleDragStart(e) {
-      this.style.opacity = '0.4';  // this / e.target is the source node.
-      dragSrcEl = this;
-      e.dataTransfer.effectAllowed = 'move';
-      e.dataTransfer.setData('text/html', this);
-    }
-
-    function handleDrop(e) {
-      e.stopPropagation();
-      // Don't do anything if dropping the same column we're dragging.
-      if (dragSrcEl != this) {
-  //@TODO: implenet sorting
-        var data = e.dataTransfer.getData('text/html');
-
-        var parent = e.target.parentNode;
-        parent.insertBefore(data, e.target)
-      }
-      return false;
-    }
-
-    function handleDragOver(e) {
-      if (e.preventDefault) {
-        e.preventDefault(); // Necessary. Allows us to drop.
-      }
-
-      e.dataTransfer.dropEffect = 'move';  // See the section on the DataTransfer object.
-
-      return false;
-    }
-
-    function handleDragEnter(e) {
-      // this / e.target is the current hover target.
-      this.classList.add('over');
-    }
-
-    function handleDragEnd(e) {
-      // this/e.target is the source node.
-
-      [].forEach.call(cols, function (col) {
-        col.classList.remove('over');
-        col.style.opacity = '1';
-      });
-    }
-
-    function handleDragLeave(e) {
-      this.classList.remove('over');  // this / e.target is previous target element.
-      this.style.opacity = '1';
-    }
-
-    [].forEach.call(cols, function (col) {
-      col.addEventListener('dragstart', handleDragStart, false);
-      col.addEventListener('dragenter', handleDragEnter, false);
-      col.addEventListener('dragover', handleDragOver, false);
-      col.addEventListener('dragleave', handleDragLeave, false);
-      col.addEventListener('drop', handleDrop, false);
-      col.addEventListener('dragend', handleDragEnd, false);
+    [].slice.call(tabs.children).forEach((itemEl)=> {
+      if (!itemEl.classList.contains('addTab')) itemEl.draggable = true;
     });
+    
+    function _onDragOver(evt) {
+      evt.preventDefault();
+      evt.dataTransfer.dropEffect = 'move';
+
+      let target = evt.target;
+      if (target && target !== dragEl && !target.classList.contains('addTab') && target.nodeName == 'LI') {
+        var rect = target.getBoundingClientRect();
+        var next = (evt.clientX - rect.left) / (rect.right - rect.left) > .5;
+        tabs.insertBefore(dragEl, next && target.nextSibling || target);
+      }
+    }
+
+    function _onDragEnd(evt) {
+      evt.preventDefault();
+      dragEl.classList.remove('ghost');
+      tabs.removeEventListener('dragover', _onDragOver, false);
+      tabs.removeEventListener('dragend', _onDragEnd, false);
+
+    }
+
+    tabs.addEventListener('dragstart', function (evt) {
+
+      //draggable element
+      dragEl = evt.target;
+      nextEl = dragEl.nextSibling;
+      evt.dataTransfer.effectAllowed = 'move';
+      evt.dataTransfer.setData('Text', dragEl.textContent);
+
+
+      tabs.addEventListener('dragover', _onDragOver, false);
+      tabs.addEventListener('dragend', _onDragEnd, false);
+
+      setTimeout(function () {
+        dragEl.classList.add('ghost');
+      }, 0)
+    }, false);
 
   }
 

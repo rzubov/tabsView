@@ -56,6 +56,7 @@ function setDemoData(id) {
 var tabs = new TabsView(document.getElementById('tabsView'),
   {
     hashNav: true,
+    draggable: true,
     beforeInit: setDemoData('tabsView')
   });
 
@@ -87,5 +88,5 @@ document.getElementById('createTab').addEventListener('click', e=> {
 new nicEditor({fullPanel: true}).panelInstance('createdTabContent');
 
 
-new TabsView(document.getElementById('tabsView2'), {hashNav: false});
+new TabsView(document.getElementById('tabsView2'), {draggable: true});
 new TabsView(document.getElementById('tabsView3'), {hashNav: true});
