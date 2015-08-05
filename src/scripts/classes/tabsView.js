@@ -174,16 +174,16 @@ class TabsView {
    *
    * */
   draggable() {
-    //@TODO:Store sorting results
     const that = this;
-    let tabs = that.elem.querySelectorAll('.tabNav')[0],
+    let tabs = that.elem.getElementsByClassName('tabNav')[0],
       dragEl,
       nextEl;
+
 
     [].slice.call(tabs.children).forEach((itemEl)=> {
       if (!itemEl.classList.contains('addTab')) itemEl.draggable = true;
     });
-    
+
     function _onDragOver(evt) {
       evt.preventDefault();
       evt.dataTransfer.dropEffect = 'move';
@@ -202,6 +202,20 @@ class TabsView {
       tabs.removeEventListener('dragover', _onDragOver, false);
       tabs.removeEventListener('dragend', _onDragEnd, false);
 
+      let data = JSON.parse(localStorage[that.elem.id]);
+
+      [].slice.call(tabs.children).forEach((itemEl, index)=> {
+        if (!itemEl.classList.contains('addTab')) {
+          var id = findById(data, itemEl.dataset.id);
+          data[id]['sort'] = index;
+        }
+      });
+
+      data.sort(function (a, b) {
+        return a.sort - b.sort;
+      });
+
+      localStorage[that.elem.id] = JSON.stringify(data);
     }
 
     tabs.addEventListener('dragstart', function (evt) {
@@ -309,6 +323,9 @@ class TabsView {
 
     if (that.elem.querySelectorAll('.tabNav li').length < 3) {
       that.activate(false, true);
+    }
+    if (that.options.draggable) {
+      that.elem.querySelector('[data-tab=' + newTab.name + ']').draggable = true;
     }
   }
 
