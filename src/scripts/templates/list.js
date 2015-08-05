@@ -17,7 +17,7 @@ export default  addr => htmlList`
             ${addr.map(addr => htmlList`
             ${htmlTab(addr)}
             `)}
-            <li class="addTab"><i class="add"></i></li>
+            <li class="addTab"></li>
           </ul>
         </div>
         </div>

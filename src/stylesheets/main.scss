@@ -9,6 +9,12 @@
   }
 }
 
+@mixin transition($transition...) {
+  -webkit-transition: $transition;
+  -o-transition: $transition;
+  transition: $transition;
+}
+
 @mixin user-select($select) {
   -webkit-user-select: $select;
   -moz-user-select: $select;
@@ -91,34 +97,65 @@ ul.tabNav li {
   }
 }
 
-ul.tabNav li.addTab {
-  width: 45px;
-  height: 45px;
-  position: relative;
-  &:hover {
-    &:before {
-      background-position: -26px 0;
+ul.tabNav li {
+  &.addTab {
+    width: 45px;
+    height: 45px;
+    position: relative;
+    &:hover {
+      &:before {
+        background-position: -26px 0;
+      }
     }
-  }
-  &:before {
-    position: absolute;
-    top: 50%;
-    margin-top: -8px;
-    left: 50%;
-    margin-left: -8px;
-    content: '';
-    width: 16px;
-    height: 16px;
-    background: transparent url(../images/ico-add.png) no-repeat 0 0;
-    display: block;
-  }
+    &:before {
+      position: absolute;
+      top: 50%;
+      margin-top: -8px;
+      left: 50%;
+      margin-left: -8px;
+      content: '';
+      width: 16px;
+      height: 16px;
+      background: transparent url(../images/ico-add.png) no-repeat 0 0;
+      display: block;
+    }
 
+  }
+  &.removeTab {
+    width: 120px;
+    height: 45px;
+    position: relative;
+    cursor:default;
+    &:hover {
+      &:before {
+        background-position: -36px 0;
+      }
+    }
+    &:before {
+      position: absolute;
+      top: 50%;
+      margin-top: -16px;
+      left: 50%;
+      margin-left: -13px;
+      content: '';
+      width: 26px;
+      height: 32px;
+      background: transparent url(../images/ico-remove.png) no-repeat 0 0;
+      display: block;
+    }
+
+  }
 }
 
 ul.tabNav li {
   &:hover,
   &:active {
     background: #000;
+  }
+  @include transition(all 150ms ease);
+  transform: translate3d(0, 0, 0);
+  i {
+    cursor: pointer !important;
   }
   i.edit {
     background: transparent url(../images/ico-edit.png) no-repeat -22px 0;
@@ -216,6 +253,10 @@ ul.tabNav li.active {
   }
 }
 
+/*[draggable] {
+  cursor: move !important;
+}*/
+
 img {
   max-width: 100%;
 }
@@ -297,6 +338,7 @@ img {
   margin-bottom: 20px;
 }
 
-.ghost{
+.ghost {
+  transform: translate3d(0, 0, 0);
   opacity: .4;
 }

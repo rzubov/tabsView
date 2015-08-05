@@ -163,7 +163,7 @@ class TabsView {
    * */
   render() {
     const that = this;
-    var list = htmlList(JSON.parse(localStorage[that.elem.id]));
+    var list = htmlList(JSON.parse(localStorage[that.elem.id]), that.options.draggable);
     var e = that.elem;
     e.innerHTML = list;
   }
@@ -179,17 +179,27 @@ class TabsView {
       dragEl,
       nextEl;
 
+    tabs.insertAdjacentHTML('beforeend', '<li class="removeTab"></li>');
 
     [].slice.call(tabs.children).forEach((itemEl)=> {
-      if (!itemEl.classList.contains('addTab')) itemEl.draggable = true;
+      if (!itemEl.classList.contains('addTab') && !itemEl.classList.contains('removeTab')) itemEl.draggable = true;
     });
+
+    function _onDrop(evt) {
+      evt.preventDefault();
+      if (evt.target.classList.contains('removeTab')) {
+        console.log(dragEl.dataset.id)
+      }
+
+    }
 
     function _onDragOver(evt) {
       evt.preventDefault();
       evt.dataTransfer.dropEffect = 'move';
 
       let target = evt.target;
-      if (target && target !== dragEl && !target.classList.contains('addTab') && target.nodeName == 'LI') {
+
+      if (target && target !== dragEl && !target.classList.contains('addTab') && !target.classList.contains('removeTab') && target.nodeName === 'LI') {
         var rect = target.getBoundingClientRect();
         var next = (evt.clientX - rect.left) / (rect.right - rect.left) > .5;
         tabs.insertBefore(dragEl, next && target.nextSibling || target);
@@ -197,15 +207,16 @@ class TabsView {
     }
 
     function _onDragEnd(evt) {
-      evt.preventDefault();
+
       dragEl.classList.remove('ghost');
       tabs.removeEventListener('dragover', _onDragOver, false);
       tabs.removeEventListener('dragend', _onDragEnd, false);
+      tabs.removeEventListener('drop', _onDrop, false);
 
       let data = JSON.parse(localStorage[that.elem.id]);
 
       [].slice.call(tabs.children).forEach((itemEl, index)=> {
-        if (!itemEl.classList.contains('addTab')) {
+        if (!itemEl.classList.contains('addTab') && !itemEl.classList.contains('removeTab')) {
           var id = findById(data, itemEl.dataset.id);
           data[id]['sort'] = index;
         }
@@ -219,7 +230,6 @@ class TabsView {
     }
 
     tabs.addEventListener('dragstart', function (evt) {
-
       //draggable element
       dragEl = evt.target;
       nextEl = dragEl.nextSibling;
@@ -229,11 +239,21 @@ class TabsView {
 
       tabs.addEventListener('dragover', _onDragOver, false);
       tabs.addEventListener('dragend', _onDragEnd, false);
+      tabs.addEventListener('drop', _onDrop, false);
 
       setTimeout(function () {
         dragEl.classList.add('ghost');
       }, 0)
     }, false);
+
+    tabs.addEventListener("mousedown", ()=> {
+      if (window.getSelection) {
+        window.getSelection().removeAllRanges();
+      } else {
+        document.selection.empty();
+      }
+    });
+
 
   }
 
