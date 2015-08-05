@@ -186,9 +186,12 @@ class TabsView {
     });
 
     function _onDrop(evt) {
+      //@TODO:create method 'markAsRemoved' for drag deleting
       evt.preventDefault();
       if (evt.target.classList.contains('removeTab')) {
-        console.log(dragEl.dataset.id)
+        if (confirm('Are you sure you want to delete "' + dragEl.innerText + '" tab?')) {
+          that.removeTab(dragEl.dataset.id);
+        }
       }
 
     }
