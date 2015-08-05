@@ -4,7 +4,7 @@ ECMAScript 2015 web-app that create tabs view control.
 
 Created with WebStorm IDE
 
-![alt tag](https://api.monosnap.com/rpc/file/download?id=MF5xTntby6Not7CKma67Ob8kGecZ5i)
+![alt tag](https://api.monosnap.com/rpc/file/download?id=4eM2NByjKeQ8bVkVw2VFjSC8lkvpJ6)
 
 ## Installation
 
